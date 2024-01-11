@@ -1,8 +1,8 @@
 import React from 'react';
 import { RouteObject, useRoutes } from 'react-router-dom';
-import RouteTable, { SyncRoute } from './routes';
+import RouteTable, { Routes } from './routes';
 
-const syncRouter = (table: SyncRoute.Routes[]): RouteObject[] => {
+const syncRouter = (table: Routes[]): RouteObject[] => {
   let routes: RouteObject[] = [];
   table.forEach((route) => {
     routes.push({

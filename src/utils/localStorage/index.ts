@@ -1,4 +1,4 @@
-const localStorage = {
+const LocalStorage = {
   // 设置永久缓存
   set(key: string, val: any) {
     if (typeof val === 'string') {
@@ -25,5 +25,4 @@ const localStorage = {
     window.localStorage.clear();
   },
 };
-
-export default localStorage;
+export default LocalStorage;

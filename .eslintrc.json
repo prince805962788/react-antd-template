@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "eslint-config-ali/typescript/react",
+    "prettier",
+    "prettier/@typescript-eslint",
+    "prettier/react",
+    "plugin:storybook/recommended"
+  ],
+  "plugins": ["simple-import-sort"],
+  "rules": {
+    "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          ["^\\u0000"], // 内置模块
+          ["^@?\\w"], // @别名
+          [".*/components/.*", "^@/components$"], // 公共组件
+          ["^"], // 绝对导入 any
+          ["^\\."] // 相对导入
+        ]
+      }
+    ]
+  }
+}

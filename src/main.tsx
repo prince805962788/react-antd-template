@@ -1,5 +1,3 @@
-// todo: 这里本不应该全局引入antd.css, 但是目前antd存在sider组件的bug，后续修复可以将这个引入删除
-import 'antd/dist/antd.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';

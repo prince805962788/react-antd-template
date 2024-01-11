@@ -1,8 +1,8 @@
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LayoutChildren, SyncRoute } from 'router/routes';
+import { LayoutChildren, Routes } from 'router/routes';
 import style from './style.module.less';
 
 const { Sider } = Layout;
@@ -20,8 +20,9 @@ function getItem(
     label,
   } as MenuItem;
 }
-function handleSub(route: SyncRoute.Routes, parent?: string): MenuItem {
-  const { path, name, icon, children } = route;
+// 处理子路由的完整路径
+function handleSub(route: Routes, parent?: string): MenuItem {
+  const { path, name, icon, children, hidden } = route;
   let newChildren: MenuItem[] = [];
   if (children && children.length > 0) {
     rootSubmenuKeys.push(path);
@@ -29,6 +30,18 @@ function handleSub(route: SyncRoute.Routes, parent?: string): MenuItem {
   }
   return getItem(name, `${parent ? '/' + parent : ''}/${path}`, icon, newChildren);
 }
+// 过滤隐藏的侧边栏
+function handleHidden(routes: Routes[]) {
+  return routes.filter((route) => {
+    if (route.children) {
+      route.children = handleHidden(route.children);
+    }
+    if (!route.hidden) {
+      return true;
+    }
+  });
+}
+// 获取当前被打开路由的key
 function getOpenKey(pathname: string) {
   const arr = pathname.split('/');
   if (!arr.length) {
@@ -38,7 +51,7 @@ function getOpenKey(pathname: string) {
   return parent.join('/');
 }
 const rootSubmenuKeys: string[] = [];
-const items: MenuItem[] = LayoutChildren.map((route) => handleSub(route));
+const items: MenuItem[] = handleHidden(LayoutChildren).map((route) => handleSub(route));
 const SiderLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -53,15 +66,24 @@ const SiderLayout: React.FC = () => {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     }
   };
+  useEffect(() => {
+    setOpenKeys([getOpenKey(pathname)]);
+  }, [pathname]);
   return (
-    <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-      <div className={style.logo} />
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={(value) => setCollapsed(value)}
+      theme="dark"
+    >
+      <div className={style.logo}></div>
       <Menu
         theme="dark"
         forceSubMenuRender={true}
         triggerSubMenuAction="click"
         openKeys={openKeys}
         onOpenChange={onOpenChange}
+        selectedKeys={[pathname]}
         defaultSelectedKeys={[pathname]}
         mode="inline"
         items={items}

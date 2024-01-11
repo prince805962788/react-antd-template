@@ -1,4 +1,4 @@
-# fabu-frontend
+# template-frontend
 
 推荐使用 pnpm
 pnpm install

@@ -1,15 +1,15 @@
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
-import postcsspxtoviewport from 'postcss-px-to-viewport';
+import postcsspxtoviewport8plugin from 'postcss-px-to-viewport-8-plugin';
 import { defineConfig } from 'vite';
-import vitePluginImp from 'vite-plugin-imp';
+// import checker from 'vite-plugin-checker';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://fabu.ai',
+        target: '',
         changeOrigin: true,
         rewrite: (url) => url.replace(/^\/api/, ''),
       },
@@ -18,14 +18,10 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    vitePluginImp({
-      libList: [
-        {
-          libName: 'antd',
-          style: (name) => `antd/lib/${name}/style/index.less`,
-        },
-      ],
-    }),
+    // 可选功能，可试试校验全局ts
+    // checker({
+    //   typescript: true,
+    // }),
   ],
   resolve: {
     alias: {
@@ -39,6 +35,7 @@ export default defineConfig({
       components: path.resolve(__dirname, 'src/components'),
       features: path.resolve(__dirname, 'src/features'),
       styles: path.resolve(__dirname, 'src/styles'),
+      pages: path.resolve(__dirname, 'src/pages'),
     },
   },
   css: {
@@ -57,7 +54,7 @@ export default defineConfig({
     },
     postcss: {
       plugins: [
-        postcsspxtoviewport({
+        postcsspxtoviewport8plugin({
           unitToConvert: 'px', // 要转化的单位
           viewportWidth: 1920, // UI设计稿的宽度
           unitPrecision: 2, // 转换后的精度，即小数点位数

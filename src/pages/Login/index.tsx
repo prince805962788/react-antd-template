@@ -1,4 +1,10 @@
-import { EyeFilled, EyeInvisibleFilled, LockFilled, UserOutlined } from '@ant-design/icons';
+import LocalStorage from '@/utils/localStorage';
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  LockOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { login } from 'api/login';
 import { useAppDispatch } from 'hooks/redux';
@@ -12,6 +18,7 @@ const LoginPage = () => {
   const confirm = async (params: { username: string; password: string }) => {
     login(params);
     dispatch(setAccount(params));
+    LocalStorage.set('account', params);
     navigate('/', { replace: true });
   };
   const onFinish = (values: { username: string; password: string }) => {
@@ -31,7 +38,7 @@ const LoginPage = () => {
           <Form.Item name="username" rules={[{ required: true, message: '请输入账号' }]}>
             <Input
               className={style.formInput}
-              prefix={<UserOutlined className={style.formInputIcon} />}
+              prefix={<UserAddOutlined className={style.formInputIcon} />}
               placeholder="输入账号"
             />
           </Form.Item>
@@ -39,17 +46,11 @@ const LoginPage = () => {
           <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]}>
             <Input.Password
               className={style.formInput}
-              prefix={<LockFilled className={style.formInputIcon} />}
+              prefix={<LockOutlined />}
               type="password"
               size="large"
               placeholder="输入密码"
-              iconRender={(visible) =>
-                visible ? (
-                  <EyeFilled className={style.formInputIcon} />
-                ) : (
-                  <EyeInvisibleFilled className={style.formInputIcon} />
-                )
-              }
+              iconRender={(visible) => (visible ? <EyeOutlined /> : <EyeInvisibleOutlined />)}
             />
           </Form.Item>
           <Form.Item>
